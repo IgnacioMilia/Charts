@@ -15,7 +15,7 @@ public class Controller {
     
 // Gráficos
     private @FXML BarChart barChart;
-    private @FXML LineChart lineChart;
+    private @FXML LineChart<?, ?> lineChart;
     private @FXML PieChart pieChart;
     private @FXML AreaChart areaChart;
     private @FXML StackedAreaChart stockedAreaChart;
@@ -30,30 +30,46 @@ public class Controller {
     
     @FXML Label lbl;
     private PieChart.Data pieData;
-
+    
+    private XYChart.Series series1;
+    private XYChart.Series series2;
+    
     public void setData() {
         dlist = FXCollections.observableArrayList();
-
-        for (int i = -10; i < 10; i ++) {
-           dlist.add(new XYChart.Data("assss"+ i, -2 * (i*i*i) + 10 * (i*i) - 33 ));
+        
+        series1 = new Series();
+        series2 = new Series();
+        Series series3 = new Series();
+        
+        
+        for (int i = -5000; i < 5000; i += 500) {
+            series1.getData().add(new XYChart.Data(""+i, 3*i*i - 100*i +30));
+            series2.getData().add(new XYChart.Data(""+i, i*i*i - i*i));
+            series3.getData().add(new XYChart.Data(""+i, 3*(i*i*i) + i*i +400));
+            //dlist.add(new XYChart.Data("assss", -3 * (i*i*i) + 5 * (i*i) - 1 ));
+           //dlist.add(new XYChart.Data("assss2", 3 * (i*i*i) - 5 * (i*i) - 1 ));
         }
         
-        ObservableList datos = FXCollections.observableArrayList( new Series(dlist));
+//        ObservableList datos = FXCollections.observableArrayList(dlist);
         // cómo agregar más funciones?
-        ObservableList datos2 = FXCollections.observableArrayList( datos);
+        //ObservableList datos2 = FXCollections.observableArrayList( datos);
         
+//        lineChart.
         switch(lbl.getText()){
             case "barras":
-                barChart.setData(datos);
+                barChart.getData().clear();
+                barChart.getData().addAll(series1, series2, series3);
                 break;
             case "lineas":
-                lineChart.setData(datos);
+                lineChart.getData().clear();
+                lineChart.getData().addAll(series1, series2, series3);
                 break;
             case "pie":
                 // ...
                 break;
             case "area":
-                areaChart.setData(datos);
+                areaChart.getData().clear();
+                areaChart.getData().addAll(series1, series2, series3);
                 break;
             case "stkArea":
                 // ...
@@ -61,6 +77,7 @@ public class Controller {
         }
     }
     
+    // si se agregan los datos en todos los gráficos al mismo tiempo, se dibujan mal
     public void bar(){
         lbl.setText("barras");
         setData();
